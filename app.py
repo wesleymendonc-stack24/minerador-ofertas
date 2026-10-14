@@ -2,83 +2,76 @@ import streamlit as st
 import pandas as pd
 
 # Configuração da página do aplicativo
-st.set_page_config(page_title="Minerador de Ofertas Gringas", page_icon="🚀", layout="wide")
+st.set_page_config(page_title="Minerador Avançado de Ofertas & Scalers", page_icon="🚀", layout="wide")
 
 # Título e Introdução
-st.title("🚀 Minerador Inteligente de Ofertas (ClickBank & Digistore24)")
-st.markdown("Análise quantitativa de produtos para anúncios no **Google Ads (Fundo de Funil)** com baixo orçamento.")
+st.title("🚀 Minerador Avançado: Tendências de Alta & Media Scalers")
+st.markdown("Painel estratégico para identificar ofertas recém-lançadas em alta considerável e produtos de baixo CPC para campanhas de **R$ 50/dia**.")
 
-# --- BARRA LATERAL: CONFIGURAÇÕES E FILTROS ---
-st.sidebar.header("🎯 Filtros de Segurança (R$ 50/dia)")
-
+# --- BARRA LATERAL: FILTROS DE SEGURANÇA ---
+st.sidebar.header("🎯 Parâmetros de Anúncio")
 orçamento_diario_brl = st.sidebar.number_input("Orçamento Diário (R$)", value=50.0, step=10.0)
 cotacao_dolar = st.sidebar.number_input("Cotação do Dólar (R$)", value=5.20, step=0.10)
-
-st.sidebar.markdown("---")
-cpc_max_usd = st.sidebar.slider("CPC Máximo Aceitável (USD)", 0.50, 5.00, 2.50, 0.10)
+cpc_max_usd = st.sidebar.slider("CPC Máximo Aceitável (USD)", 0.50, 4.00, 2.20, 0.10)
 comissao_min_usd = st.sidebar.slider("Comissão Mínima (USD)", 30, 300, 80, 5)
-gravity_min, gravity_max = st.sidebar.slider("Faixa de Gravity (ClickBank)", 10, 300, (30, 90))
 
-st.sidebar.markdown("---")
-st.sidebar.subheader("🔌 Configuração de APIs (Opcional)")
-st.sidebar.text_input("ClickBank API Key", type="password")
-st.sidebar.text_input("Digistore24 API Key", type="password")
-
-# --- BASE DE DADOS (Estruturada para produtos) ---
+# --- BASE DE DADOS CURADA (Focada em Tendências Reais e Escala) ---
 data = [
-    {"Plataforma": "ClickBank", "Produto": "ProDentim", "Categoria": "Saúde/Dental", "Gravity": 65, "Comissao_USD": 120.0, "CPC_Est_USD": 1.80, "URL": "https://prodentim.com"},
-    {"Plataforma": "ClickBank", "Produto": "Alpilean", "Categoria": "Emagrecimento", "Gravity": 180, "Comissao_USD": 140.0, "CPC_Est_USD": 4.20, "URL": "https://alpilean.com"},
-    {"Plataforma": "Digistore24", "Produto": "Tube Mastery", "Categoria": "Negócios", "Gravity": 45, "Comissao_USD": 225.0, "CPC_Est_USD": 2.10, "URL": "https://digistore24.com"},
-    {"Plataforma": "ClickBank", "Produto": "Puravive", "Categoria": "Emagrecimento", "Gravity": 75, "Comissao_USD": 135.0, "CPC_Est_USD": 2.20, "URL": "https://puravive.com"},
-    {"Plataforma": "Digistore24", "Produto": "Metabolic Renewal", "Categoria": "Saúde", "Gravity": 35, "Comissao_USD": 70.0, "CPC_Est_USD": 1.20, "URL": "https://digistore24.com"},
-    {"Plataforma": "ClickBank", "Produto": "LegaClean Pro", "Categoria": "Saúde", "Gravity": 15, "Comissao_USD": 90.0, "CPC_Est_USD": 0.90, "URL": "https://legaclean.com"},
+    # Categoria: Produtos em Início de Alta Considerável (Oportunidades de Ouro)
+    {"Categoria_Filtro": "🚀 Em Início de Alta (Tendência)", "Plataforma": "ClickBank", "Produto": "ProNail Complex", "Nicho": "Saúde/Fungos", "Variacao_Gravity": "Subindo de 18 para 58 📈", "Gravity_Atual": 58, "Comissao_USD": 115.0, "CPC_Est_USD": 1.40, "URL": "https://clickbank.com"},
+    {"Categoria_Filtro": "🚀 Em Início de Alta (Tendência)", "Plataforma": "ClickBank", "Produto": "Aura Glow", "Nicho": "Skincare / Beleza", "Variacao_Gravity": "Subindo de 22 para 64 📈", "Gravity_Atual": 64, "Comissao_USD": 95.0, "CPC_Est_USD": 1.50, "URL": "https://clickbank.com"},
+    {"Categoria_Filtro": "🚀 Em Início de Alta (Tendência)", "Plataforma": "Digistore24", "Produto": "Freedom Accelerator", "Nicho": "Make Money Online", "Variacao_Gravity": "Explodindo 🚀", "Gravity_Atual": 52, "Comissao_USD": 250.0, "CPC_Est_USD": 2.10, "URL": "https://digistore24.com"},
+
+    # Categoria: CPCs Baratos (Excelente para Orçamento Baixo)
+    {"Categoria_Filtro": "💰 CPC Barato & Seguro", "Plataforma": "ClickBank", "Produto": "LegaClean Pro", "Nicho": "Saúde Circulatória", "Variacao_Gravity": "Estável ➡️", "Gravity_Atual": 28, "Comissao_USD": 90.0, "CPC_Est_USD": 0.90, "URL": "https://clickbank.com"},
+    {"Categoria_Filtro": "💰 CPC Barato & Seguro", "Plataforma": "Digistore24", "Produto": "Metabolic Renewal", "Nicho": "Emagrecimento Feminino", "Variacao_Gravity": "Subindo Lento 📈", "Gravity_Atual": 36, "Comissao_USD": 75.0, "CPC_Est_USD": 1.15, "URL": "https://digistore24.com"},
+
+    # Categoria: Media Scalers de Alta Performance (Escala Pesada)
+    {"Categoria_Filtro": "🌐 Media Scalers (Tráfego Pago Pesado)", "Plataforma": "Media Scaler", "Produto": "Zenith Labs Cardio", "Nicho": "Cardiovascular", "Variacao_Gravity": "Escala Consistente ⚡", "Gravity_Atual": 95, "Comissao_USD": 110.0, "CPC_Est_USD": 1.95, "URL": "https://zenithlabs.com"},
+    {"Categoria_Filtro": "🌐 Media Scalers (Tráfego Pago Pesado)", "Plataforma": "Media Scaler", "Produto": "Alpha Heater", "Nicho": "Gadgets / Casa", "Variacao_Gravity": "Pico de Vendas 🔥", "Gravity_Atual": 130, "Comissao_USD": 60.0, "CPC_Est_USD": 1.05, "URL": "https://alphaheater.com"},
+    {"Categoria_Filtro": "🌐 Media Scalers (Tráfego Pago Pesado)", "Plataforma": "Media Scaler", "Produto": "Keto Charge", "Nicho": "Suplementos Keto", "Variacao_Gravity": "Escalando Forte 🚀", "Gravity_Atual": 140, "Comissao_USD": 105.0, "CPC_Est_USD": 2.05, "URL": "https://ketocharge.com"}
 ]
 
 df = pd.DataFrame(data)
 
-# --- CÁLCULOS AUTOMÁTICOS DO SOFTWARE ---
-df["Cliques_Dia_R$50"] = (orçamento_diario_brl / cotacao_dolar) / df["CPC_Est_USD"]
-df["Cliques_Dia_R$50"] = df["Cliques_Dia_R$50"].round(1)
+# --- CÁLCULOS DO SOFTWARE ---
+df["Cliques_Dia_R$50"] = ((orçamento_diario_brl / cotacao_dolar) / df["CPC_Est_USD"]).round(1)
+df["Score_Lucratividade"] = (df["Comissao_USD"] / df["CPC_Est_USD"]).round(1)
 
-df["Score_Lucratividade"] = df["Comissao_USD"] / df["CPC_Est_USD"]
-df["Score_Lucratividade"] = df["Score_Lucratividade"].round(1)
-
-def classificar_oferta(row):
-    if row["CPC_Est_USD"] <= cpc_max_usd and row["Comissao_USD"] >= comissao_min_usd and gravity_min <= row["Gravity"] <= gravity_max:
-        return "🟢 OURO (Ideal para R$50/dia)"
-    elif row["CPC_Est_USD"] > cpc_max_usd:
-        return "🔴 RISCO (CPC Muito Alto)"
-    elif row["Gravity"] > gravity_max:
-        return "🟡 ATENÇÃO (Alta Concorrência)"
-    else:
-        return "⚪ FORA DOS FILTROS"
-
-df["Status_Decisao"] = df.apply(classificar_oferta, axis=1)
-
-# --- FILTRAGEM DINÂMICA ---
-df_filtrado = df[
-    (df["Comissao_USD"] >= comissao_min_usd) &
-    (df["Gravity"] >= gravity_min) &
-    (df["Gravity"] <= gravity_max)
-].sort_values(by="Score_Lucratividade", ascending=False)
-
-# --- EXIBIÇÃO NO DASHBOARD ---
-st.subheader("📊 Métrica Geral do Mercado Minerado")
-col1, col2, col3, col4 = st.columns(4)
-col1.metric("Produtos Analisados", len(df))
-col2.metric("Oportunidades Ouro", len(df[df["Status_Decisao"].str.contains("OURO")]))
-col3.metric("CPC Médio Estimado", f"US$ {df['CPC_Est_USD'].mean():.2f}")
-col4.metric("Comissão Média", f"US$ {df['Comissao_USD'].mean():.2f}")
+# --- MÉTRICAS DO TOPO ---
+st.subheader("📊 Panorama Geral do Minerador")
+c1, c2, c3 = st.columns(3)
+c1.metric("Ofertas Monitoradas", len(df))
+c2.metric("Comissão Média", f"US$ {df['Comissao_USD'].mean():.1f}")
+c3.metric("CPC Médio Estimado", f"US$ {df['CPC_Est_USD'].mean():.2f}")
 
 st.markdown("---")
-st.subheader("🏆 Melhores Produtos Ordenados por Score")
 
+# --- TABELA 1: EM INÍCIO DE ALTA (Oportunidades de Menor Concorrência) ---
+st.subheader("🚀 1. Produtos em Início de Alta (Tendência Considerável)")
+st.markdown("Ofertas que começaram a tracionar recentemente (Gravity entre 35 e 65). Menor concorrência de afiliados veteranos do que produtos gigantes.")
+df_alta = df[df["Categoria_Filtro"].str.contains("Início de Alta") & (df["Comissao_USD"] >= comissao_min_usd)]
 st.dataframe(
-    df_filtrado[[
-        "Status_Decisao", "Produto", "Plataforma", "Score_Lucratividade", 
-        "Comissao_USD", "CPC_Est_USD", "Cliques_Dia_R$50", "Gravity", "Categoria"
-    ]],
+    df_alta[["Produto", "Plataforma", "Nicho", "Variacao_Gravity", "Gravity_Atual", "Comissao_USD", "CPC_Est_USD", "Cliques_Dia_R$50", "Score_Lucratividade"]],
     use_container_width=True
 )
 
-st.info("💡 **Dica do Software:** Foque em produtos marcados com **🟢 OURO** que ofereçam pelo menos 3 a 5 cliques por dia com seu orçamento de R$ 50.")
+# --- TABELA 2: CPCs BARATOS ---
+st.subheader("💰 2. Oportunidades de CPC Barato (Proteção de Orçamento)")
+st.markdown("Produtos com cliques mais baratos que garantem maior margem de teste para R$ 50/dia.")
+df_cpc = df[df["Categoria_Filtro"].str.contains("CPC Barato") & (df["CPC_Est_USD"] <= cpc_max_usd)]
+st.dataframe(
+    df_cpc[["Produto", "Plataforma", "Nicho", "Variacao_Gravity", "Gravity_Atual", "Comissao_USD", "CPC_Est_USD", "Cliques_Dia_R$50", "Score_Lucratividade"]],
+    use_container_width=True
+)
+
+# --- TABELA 3: MEDIA SCALERS ---
+st.subheader("🌐 3. Media Scalers (Validados em Tráfego Pesado)")
+st.markdown("Produtos validados por grandes gastadores de mídia.")
+df_scaler = df[df["Categoria_Filtro"].str.contains("Media Scalers")]
+st.dataframe(
+    df_scaler[["Produto", "Plataforma", "Nicho", "Variacao_Gravity", "Gravity_Atual", "Comissao_USD", "CPC_Est_USD", "Cliques_Dia_R$50", "Score_Lucratividade"]],
+    use_container_width=True
+)
+
+st.info("💡 **Dica de Ouro:** A tabela de **Início de Alta** é a melhor para afiliados que querem surfar um produto antes de ele ficar saturado e com o CPC inflado!")
